@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5007';
+const API_URL = process.env.REACT_APP_API_URL || 'https://say-chat-backend.onrender.com';
 
 function App() {
   const [isLogin, setIsLogin] = useState(true);
