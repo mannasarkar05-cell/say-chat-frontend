@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import './App.css';
 
 const API_URL = process.env.REACT_APP_API_URL || 'https://say-chat-backend.onrender.com';
+const socket = io(API_URL);
 
 function App() {
   const [isLogin, setIsLogin] = useState(true);
