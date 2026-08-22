@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import io from 'socket.io-client';
 import './App.css';
 
-const socket = io('http://localhost:5007');
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5007';
 
 function App() {
   const [isLogin, setIsLogin] = useState(true);
