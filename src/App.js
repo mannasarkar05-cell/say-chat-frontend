@@ -23,7 +23,7 @@ function App() {
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5007/api/register', {
+      const response = await fetch(`${API_URL}/api/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, email, password }),
@@ -44,7 +44,7 @@ function App() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5007/api/login', {
+      const response = await fetch(`${API_URL}/api/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -65,7 +65,7 @@ function App() {
   // অন্য ইউজারদের তালিকা আনা
   const fetchUsers = async (userEmail) => {
     try {
-      const response = await fetch(`http://localhost:5007/api/users/${userEmail}`);
+      const response = await fetch(`${API_URL}/api/users/${userEmail}`);
       const data = await response.json();
       if (response.ok) {
         setUsersList(data);
@@ -79,7 +79,7 @@ function App() {
   const selectChatUser = async (user) => {
     setSelectedChatUser(user);
     try {
-      const response = await fetch(`http://localhost:5007/api/messages/${loggedInUser.email}/${user.email}`);
+      const response = await fetch(`${API_URL}/api/messages/${loggedInUser.email}/${user.email}`);
       const data = await response.json();
       if (response.ok) {
         setChatMessages(data);
