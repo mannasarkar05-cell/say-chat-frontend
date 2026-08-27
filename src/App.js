@@ -13,6 +13,7 @@ function App() {
   const [message, setMessage] = useState('');
   
   const [loggedInUser, setLoggedInUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [usersList, setUsersList] = useState([]);
   const [selectedChatUser, setSelectedChatUser] = useState(null);
   
@@ -52,8 +53,9 @@ function App() {
       const data = await response.json();
       if (response.ok) {
         setLoggedInUser({ username: data.username, email: data.email });
+        setToken(data.token);
         socket.emit('join_room', data.email);
-        fetchUsers(data.email);
+        fetchUsers(data.email, data.token);
       } else {
         setMessage(data.message);
       }
@@ -63,12 +65,16 @@ function App() {
   };
 
   // অন্য ইউজারদের তালিকা আনা
-  const fetchUsers = async (userEmail) => {
+  const fetchUsers = async (userEmail, authToken) => {
     try {
-      const response = await fetch(`${API_URL}/api/users/${userEmail}`);
+      const response = await fetch(`${API_URL}/api/users/${userEmail}`, {
+        headers: { 'Authorization': `Bearer ${authToken}` }
+      });
       const data = await response.json();
       if (response.ok) {
         setUsersList(data);
+      } else {
+        console.log('Error fetching users:', data.message);
       }
     } catch (error) {
       console.log('Error fetching users');
@@ -79,17 +85,21 @@ function App() {
   const selectChatUser = async (user) => {
     setSelectedChatUser(user);
     try {
-      const response = await fetch(`${API_URL}/api/messages/${loggedInUser.email}/${user.email}`);
+      const response = await fetch(`${API_URL}/api/messages/${loggedInUser.email}/${user.email}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
       const data = await response.json();
       if (response.ok) {
         setChatMessages(data);
+      } else {
+        console.log('Error fetching messages:', data.message);
       }
     } catch (error) {
       console.log('Error fetching messages');
     }
   };
 
-  // রিয়েল-টাইম মেসেজ রিসিভ করা
+  // রিয়েল-টাইম মেসেজ রিসিভ করা
   useEffect(() => {
     socket.on('receive_message', (data) => {
       if (selectedChatUser && data.sender === selectedChatUser.email) {
